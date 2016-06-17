@@ -229,7 +229,8 @@ RE2_exec(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
     RE2 * ri = (RE2*) SvANY(rx)->pprivate;
     regexp * re = SvANY(rx);
 
-    re2::StringPiece res[re->nparens + 1];
+    //re2::StringPiece res[re->nparens + 1];
+    re2::StringPiece *res = new re2::StringPiece[re->nparens + 1];
 
 #ifdef RE2_DEBUG
     Perl_warner(aTHX_ packWARN(WARN_MISC), "RE2: Matching '%s' (%p, %p) against '%s'", stringarg, strbeg, stringarg, RX_WRAPPED(rx));
@@ -250,6 +251,7 @@ RE2_exec(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
 
     /* Matching failed */
     if (!ok) {
+        delete [] res;
         return 0;
     }
 
@@ -265,6 +267,8 @@ RE2_exec(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
             re->offs[i].end   = -1;
         }
     }
+
+    delete [] res;
 
     return 1;
 }
