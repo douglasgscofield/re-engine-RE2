@@ -247,7 +247,8 @@ RE2_exec(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
             stringarg - strbeg,
             strend - strbeg,
             RE2::UNANCHORED,
-            res, sizeof res / sizeof *res);
+            res, re->nparens + 1);
+            //res, sizeof res / sizeof *res);
 
     /* Matching failed */
     if (!ok) {
